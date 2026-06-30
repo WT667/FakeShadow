@@ -5,7 +5,13 @@
 [![GitHub license](https://img.shields.io/github/license/WT667/FakeShadow)](https://github.com/WT667/FakeShadow/blob/main/LICENSE)
 
 ---
-## 思路概览
+## 项目简介 + 思路概览
+### 项目简介
+`FakeShadow` 是一个**纯学习用途**的开源练习项目，旨在深入探索 Android 虚拟定位技术，并基于 **LSPosed / Xposed** 框架实现类似"Shadow (影子)"模块的虚拟定位功能。本项目通过 Hook 系统定位服务，提供伪造 GPS、Wi-Fi 和基站信息的能力，帮助开发者理解其工作原理和实现细节。
+
+**重要声明**：本项目仅用于技术研究和个人学习，**严禁**用于任何违规、作弊、绕过平台风控的场景（如企业打卡、游戏外挂等）。一切因滥用本项目而产生的后果，由使用者自行承担。
+
+### 思路概览
 - **Hook 系统定位服务**：通过 LSPosed/Xposed 框架，拦截并修改 Android 系统的 GPS、Fused Location 等定位服务接口。
 - **伪造 Wi-Fi / 基站信息**：实现对 Wi-Fi 和基站信息的伪造，以增强虚拟定位的真实性，提高防检测能力。
 - **简单 UI 选点 + 控制**：未来计划开发一个简洁的用户界面，允许用户直观地选择伪造位置，并对虚拟定位功能进行开启、关闭和参数调整。
@@ -45,4 +51,5 @@
 如果你有任何问题、建议或合作意向，欢迎通过以下方式联系项目维护者：
 - GitHub Issues: [在 FakeShadow 仓库中提交 Issue](https://github.com/WT667/FakeShadow/issues)
 - GitHub Profile: [WT667](https://github.com/WT667)
+
 我们期待与你共同学习和进步！
