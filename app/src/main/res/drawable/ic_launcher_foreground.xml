@@ -1,0 +1,13 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Location pin icon -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,50m-14,0a14,14 0,1 1,28 0a14,14 0,1 1,-28 0" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,28c-13.3,0 -24,10.7 -24,24c0,18 24,40 24,40s24,-22 24,-40C78,38.7 67.3,28 54,28zM54,62c-6.6,0 -12,-5.4 -12,-12s5.4,-12 12,-12s12,5.4 12,12S60.6,62 54,62z" />
+</vector>

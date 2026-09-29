@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">FakeShadow</string>
+    <string name="module_description">学习用 Android 虚拟定位模块（LSPosed）。仅用于技术研究，请勿用于违规场景。</string>
+
+    <string name="label_enable">启用虚拟定位</string>
+    <string name="label_lat">纬度 Latitude</string>
+    <string name="label_lng">经度 Longitude</string>
+    <string name="label_target">目标包名（留空=全部应用）</string>
+    <string name="btn_save">保存设置</string>
+
+    <string name="toast_invalid_coords">坐标格式错误：纬度 -90~90，经度 -180~180</string>
+    <string name="toast_saved_on">已保存，虚拟定位已开启</string>
+    <string name="toast_saved_off">已保存，虚拟定位已关闭</string>
+</resources>

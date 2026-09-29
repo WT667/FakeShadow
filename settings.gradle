@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "FakeShadow"
-include ":app", ":xposed_module"
+include ":app"

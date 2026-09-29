@@ -2,54 +2,62 @@
 [![GitHub stars](https://img.shields.io/github/stars/WT667/FakeShadow?style=social)](https://github.com/WT667/FakeShadow/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/WT667/FakeShadow?style=social)](https://github.com/WT667/FakeShadow/network/members)
 [![GitHub issues](https://img.shields.io/github/issues/WT667/FakeShadow)](https://github.com/WT667/FakeShadow/issues)
-[![GitHub license](https://img.shields.io/github/license/WT667/FakeShadow)](https://github.com/WT667/FakeShadow/blob/main/LICENSE)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue)](https://github.com/WT667/FakeShadow/blob/main/LICENSE)
 
 ---
-## 项目简介 + 思路概览
-### 项目简介
-`FakeShadow` 是一个**纯学习用途**的开源练习项目，旨在深入探索 Android 虚拟定位技术，并基于 **LSPosed / Xposed** 框架实现类似"Shadow (影子)"模块的虚拟定位功能。本项目通过 Hook 系统定位服务，提供伪造 GPS、Wi-Fi 和基站信息的能力，帮助开发者理解其工作原理和实现细节。
 
-**重要声明**：本项目仅用于技术研究和个人学习，**严禁**用于任何违规、作弊、绕过平台风控的场景（如企业打卡、游戏外挂等）。一切因滥用本项目而产生的后果，由使用者自行承担。
+## 项目简介
 
-### 思路概览
-- **Hook 系统定位服务**：通过 LSPosed/Xposed 框架，拦截并修改 Android 系统的 GPS、Fused Location 等定位服务接口。
-- **伪造 Wi-Fi / 基站信息**：实现对 Wi-Fi 和基站信息的伪造，以增强虚拟定位的真实性，提高防检测能力。
-- **简单 UI 选点 + 控制**：未来计划开发一个简洁的用户界面，允许用户直观地选择伪造位置，并对虚拟定位功能进行开启、关闭和参数调整。
-- **模块化设计**：项目分为 `app` (UI 控制) 和 `xposed_module` (核心 Hook 逻辑) 两个模块，便于开发和维护。
+`FakeShadow` 是一个**纯学习用途**的 Android 虚拟定位模块，基于 **LSPosed / Xposed** 框架，通过 Hook 系统定位服务伪造 GPS 坐标，帮助理解虚拟定位的工作原理。
 
----
-## 当前进度
-- [x] 创建仓库 + 基本 README
-- [x] 添加项目结构（app / xposed 模块）
-- [x] 核心 Hook 代码示例 (参见 `xposed_module/src/main/java/com/fakeshadow/XposedHook.java`)
-- [ ] UI 选地图界面
-- [ ] 测试与日志
+**重要声明**：本项目仅用于技术研究和个人学习，**严禁**用于任何违规、作弊、绕过平台风控的场景。
 
----
-## 如何参与 / 使用
-我们欢迎所有对 Android 逆向工程和虚拟定位技术感兴趣的开发者参与贡献。你可以通过以下方式加入我们：
-1. Fork 本仓库。
-2. Clone 到本地：`git clone https://github.com/你的用户名/FakeShadow.git`。
-3. 在 Android Studio 中打开项目，进行学习、修改或功能扩展。
-4. 欢迎提交 Pull Request（PR）分享你的改进、新功能或 Bug 修复！
+## 功能
 
-### 贡献方式
-我们热忱欢迎各种形式的贡献，包括但不限于：
-- **功能开发**：实现新的 Hook 点、UI 界面或防检测机制。
-- **代码优化**：改进现有代码的性能、可读性或稳定性。
-- **文档完善**：优化项目说明、使用指南或技术文档。
-- **Bug 报告与修复**：提交 Bug 报告，或提供 Bug 修复方案。
+- 一键开关虚拟定位
+- 自定义经纬度（带坐标合法性校验）
+- 按包名指定目标应用（留空 = 全局生效）
+- Hook `LocationManager.getLastKnownLocation()` + `Location`  getter 链
+- 自动补全 providers 列表，避免目标应用检测到 GPS 缺失
+- 通过 `XSharedPreferences` 与 Hook 进程通信
 
----
+## 项目结构
+
+```
+app/                          # 唯一模块（UI + Xposed Hook 同包）
+├── build.gradle
+└── src/main/
+    ├── AndroidManifest.xml    # Xposed 模块声明
+    ├── assets/xposed_init     # Hook 入口声明
+    ├── java/com/fakeshadow/
+    │   ├── MainActivity.java  # 控制面板
+    │   └── XposedHook.java    # 核心 Hook 逻辑
+    └── res/
+        ├── layout/activity_main.xml
+        └── values/            # strings / themes / colors
+```
+
+## 构建与使用
+
+1. Android Studio Hedgehog+ 打开本项目
+2. `./gradlew :app:assembleDebug` 编译
+3. 安装 APK 到 rooted 设备
+4. 在 LSPosed 管理器中启用模块，勾选目标作用域
+5. 打开 FakeShadow，输入坐标、选择目标应用，保存并开启开关
+6. 重启目标应用使 Hook 生效
+
+## 技术要点
+
+| Hook 点 | 作用 |
+|---------|------|
+| `LocationManager.getLastKnownLocation` | 返回伪造 Location 对象 |
+| `Location.getLatitude/Longitude` | 所有 Location 读取返回假坐标 |
+| `Location.getAccuracy/getTime/getElapsedRealtimeNanos` | 伪造精度和时间戳，避免时间不一致检测 |
+| `LocationManager.getProviders` | 确保 GPS / NETWORK provider 始终存在 |
+| `LocationManager.requestLocationUpdates` | 不阻断调用，由 getter hook 统一转换 |
+
 ## 参考资料
-- LSPosed 官网：[https://github.com/LSPosed/LSPosed](https://github.com/LSPosed/LSPosed)
-- Xposed API：[https://github.com/rovo89/XposedBridge](https://github.com/rovo89/XposedBridge)
-- 类似开源项目：FakeLocation ([https://github.com/Lerist/FakeLocation](https://github.com/Lerist/FakeLocation))
 
----
-## 联系方式
-如果你有任何问题、建议或合作意向，欢迎通过以下方式联系项目维护者：
-- GitHub Issues: [在 FakeShadow 仓库中提交 Issue](https://github.com/WT667/FakeShadow/issues)
-- GitHub Profile: [WT667](https://github.com/WT667)
-
-我们期待与你共同学习和进步！
+- [LSPosed](https://github.com/LSPosed/LSPosed)
+- [Xposed API](https://github.com/rovo89/XposedBridge)
+- [FakeLocation (Lerist)](https://github.com/Lerist/FakeLocation)
