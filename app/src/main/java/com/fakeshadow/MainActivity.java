@@ -38,9 +38,8 @@ public class MainActivity extends AppCompatActivity {
         etTarget = findViewById(R.id.et_target);
         btnSave = findViewById(R.id.btn_save);
 
-        // MODE_WORLD_READABLE lets the hook process read our prefs.
-        // LSPosed grants this automatically when the module is activated.
-        sp = getSharedPreferences(PREFS, MODE_WORLD_READABLE);
+        // LSPosed 自动桥接 prefs，无需 MODE_WORLD_READABLE（API 24+ 会崩）
+        sp = getSharedPreferences(PREFS, MODE_PRIVATE);
 
         loadPrefs();
 
