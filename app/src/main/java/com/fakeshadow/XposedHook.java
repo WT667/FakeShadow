@@ -30,7 +30,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 public class XposedHook implements IXposedHookLoadPackage {
 
     private static final String TAG = "FakeShadow";
-    private static final String PKG = BuildConfig.APPLICATION_ID;
+    private static final String PKG = "com.fakeshadow";
     private static final String PREFS = "fakeshadow_prefs";
 
     private XSharedPreferences prefs;
@@ -132,9 +132,12 @@ public class XposedHook implements IXposedHookLoadPackage {
         // 4) getCurrentLocation (API 30+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             try {
+                Class<?> locationConsumerCls =
+                        XposedHelpers.findClass("android.location.LocationConsumer",
+                                lpparam.classLoader);
                 XposedHelpers.findAndHookMethod(LocationManager.class, "getCurrentLocation",
                         String.class, java.util.concurrent.Executor.class,
-                        android.location.LocationConsumer.class, new XC_MethodHook() {
+                        locationConsumerCls, new XC_MethodHook() {
                             @Override
                             protected void afterHookedMethod(MethodHookParam param) {
                                 // LocationConsumer.accept(Location) will be hooked via
