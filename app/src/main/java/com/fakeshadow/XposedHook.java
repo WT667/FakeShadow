@@ -80,12 +80,12 @@ public class XposedHook implements IXposedHookLoadPackage {
         }
 
         try {
-            fakeLat = Double.parseDouble(prefs.getString("latitude", "34.052235"));
-            fakeLng = Double.parseDouble(prefs.getString("longitude", "-118.243683"));
+            fakeLat = Double.parseDouble(prefs.getString("latitude", "39.9892"));
+            fakeLng = Double.parseDouble(prefs.getString("longitude", "116.3975"));
         } catch (NumberFormatException e) {
             XposedBridge.log(TAG + ": invalid lat/lng in prefs, using defaults");
-            fakeLat = 34.052235;
-            fakeLng = -118.243683;
+            fakeLat = 39.9892;
+            fakeLng = 116.3975;
         }
         fakeAccuracy = prefs.getFloat("accuracy", 5.0f);
         return true;

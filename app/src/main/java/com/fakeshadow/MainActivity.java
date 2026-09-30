@@ -5,25 +5,41 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 /**
- * Control panel for FakeShadow.  Writes settings to
- * {@code fakeshadow_prefs} with MODE_WORLD_READABLE so the Xposed hook
- * (running inside other apps' processes) can read them via XSharedPreferences.
+ * Control panel for FakeShadow.
+ * Includes top-10 Chinese university location presets.
  */
 public class MainActivity extends AppCompatActivity {
 
     private static final String PREFS = "fakeshadow_prefs";
+
+    /** 中国TOP10高校预设：名称, 纬度, 经度 */
+    private static final String[][] UNIVERSITIES = {
+            {"北京大学",   "39.9892",  "116.3975"},
+            {"清华大学",   "40.0027",  "116.3264"},
+            {"复旦大学",   "31.2988",  "121.5049"},
+            {"上海交大",   "31.0285",  "121.4358"},
+            {"浙江大学",   "30.2681",  "120.1193"},
+            {"南京大学",   "32.1195",  "118.9436"},
+            {"中科大",     "31.8334",  "117.2733"},
+            {"武汉大学",   "30.5419",  "114.3568"},
+            {"华中科大",   "30.5100",  "114.4127"},
+            {"中山大学",   "23.0975",  "113.2960"},
+    };
 
     private SwitchMaterial swEnabled;
     private TextInputEditText etLat;
     private TextInputEditText etLng;
     private TextInputEditText etTarget;
     private MaterialButton btnSave;
+    private ChipGroup chipGroup;
 
     private SharedPreferences sp;
 
@@ -37,19 +53,37 @@ public class MainActivity extends AppCompatActivity {
         etLng = findViewById(R.id.et_lng);
         etTarget = findViewById(R.id.et_target);
         btnSave = findViewById(R.id.btn_save);
+        chipGroup = findViewById(R.id.chip_universities);
 
-        // LSPosed 自动桥接 prefs，无需 MODE_WORLD_READABLE（API 24+ 会崩）
         sp = getSharedPreferences(PREFS, MODE_PRIVATE);
-
         loadPrefs();
+        setupUniversityChips();
 
         btnSave.setOnClickListener(v -> savePrefs());
     }
 
+    private void setupUniversityChips() {
+        for (String[] uni : UNIVERSITIES) {
+            String name = uni[0];
+            String lat = uni[1];
+            String lng = uni[2];
+
+            Chip chip = new Chip(this);
+            chip.setText(name);
+            chip.setCheckable(true);
+            chip.setOnClickListener(v -> {
+                etLat.setText(lat);
+                etLng.setText(lng);
+                Toast.makeText(this, name + " " + lat + ", " + lng, Toast.LENGTH_SHORT).show();
+            });
+            chipGroup.addView(chip);
+        }
+    }
+
     private void loadPrefs() {
         swEnabled.setChecked(sp.getBoolean("enabled", false));
-        etLat.setText(sp.getString("latitude", "34.052235"));
-        etLng.setText(sp.getString("longitude", "-118.243683"));
+        etLat.setText(sp.getString("latitude", "39.9892"));
+        etLng.setText(sp.getString("longitude", "116.3975"));
         etTarget.setText(sp.getString("target_package", ""));
     }
 
